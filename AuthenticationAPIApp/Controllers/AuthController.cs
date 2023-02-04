@@ -21,7 +21,7 @@ namespace AuthenticationAPIApp.Controllers
         new User {UserName = "user1", Password = "password1", Role = "player", Scope = "b_game"},
         new User {UserName = "user2", Password = "password2", Role = "admin", Scope ="vip_character_personalize"}  };
 
-        [HttpPost("/loginWihtoutJwtMiddlewire")]
+        [HttpPost("/login")]
         public IActionResult Login([FromBody] Login model)
         {
 
