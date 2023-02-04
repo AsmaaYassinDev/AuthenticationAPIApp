@@ -1,5 +1,4 @@
 ﻿using AuthenticationAPIApp.Model;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -42,37 +41,7 @@ namespace AuthenticationAPIApp.Controllers
             _logger.LogInformation($" Valid user." + " " + model.UserName);
             return Ok(GenerateToken(user));
         }
-        [HttpPost("/loginJwtMiddlewire")]
-        public async Task<IActionResult> LoginWithJwtMiddlewire([FromBody] Login model)
-        {
-            var reposne = Unauthorized();
-            _logger.LogInformation($" Authentication for the user." + " " + model.UserName);
-            // Get the user from the list of users
-            var user = Users.SingleOrDefault(x => x.UserName == model.UserName && x.Password == model.Password);
 
-            // Validate the request
-            if (!ModelState.IsValid)
-            {
-                _logger.LogInformation($" empty data.");
-                return BadRequest(ModelState);
-            }
-            // Return unauthorized if user is not found
-            if (user == null)
-            {
-                _logger.LogInformation($"The user is not found in the list." + " " + model.UserName);
-                return Unauthorized("The user is not found in the list.");
-            }
-
-            // Authenticate the user
-            var claims = new List<Claim>{
-                          new Claim(ClaimTypes.Name, user.UserName),
-                          new Claim(ClaimTypes.Role, user.Role),
-                          new Claim("scope", user.Scope)};
-            var identity = new ClaimsIdentity(claims, "jwt");
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync("DefaultAuthenticationScheme", principal);
-            return Ok(new { user });
-        }
 
         private string GenerateToken(User user)
         {
